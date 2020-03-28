@@ -91,16 +91,25 @@ function multerMiddlerware() {
 
 function saveImage(req,res) {
   if(req.place) {
-    if(req.files && req.files.avatar){
-      const path = req.files.avatar[0].path;
-      uploader(path).then(result => {
-        console.log(result);
-        res.json(req.place);
-      }).catch(err => {
-        console.log(err);
-        res.json(err)
-      })
-    }
+    // definiendo cuantos timpos de archivos se pueden subir
+    const files = ['avatar','cover'];
+    const promises = [];
+    files.forEach(imageType=> {
+      if(req.files && req.files[imageType]){
+        const path = req.files[imageType][0].path;
+       promises.push( req.place.updateImage(path,imageType))
+      }
+    })
+
+    Promise.all(promises).then(results => {
+      console.log(results);
+      res.json(req.place);
+    }).catch(err => {
+      console.log(err);
+      res.json(err);
+    });
+
+    
   } else {
     res.status(422).json({
       error: req.error || 'No se ha podido guardar el lugar'
