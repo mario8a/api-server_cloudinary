@@ -4,6 +4,8 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 const places = require('./routes/places');
+const users = require('./routes/users');
+const sessions  = require('./routes/sessions')
 
 const db = require('./config/database');
 
@@ -21,7 +23,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/places', places)
+app.use('/places', places);
+app.use('/users', users);
+app.use('/sessions', sessions);
 
 
 // catch 404 and forward to error handler
