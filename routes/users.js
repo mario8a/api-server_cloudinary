@@ -9,6 +9,6 @@ router.route('/')
       .post(usersControllers.create,
             sessionsControllers.generateToken,
             sessionsControllers.sendToken)
-      .get(usersControllers.destroyAll);
+      // .get(usersControllers.destroyAll);
 
 module.exports = router;

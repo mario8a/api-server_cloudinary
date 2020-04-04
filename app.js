@@ -2,12 +2,15 @@ var express = require('express');
 var path = require('path');
 var logger = require('morgan');
 var bodyParser = require('body-parser');
+const jwtMiddleware = require('express-jwt');
 
 const places = require('./routes/places');
 const users = require('./routes/users');
 const sessions  = require('./routes/sessions')
 
 const db = require('./config/database');
+const secrets = require('./config/secret');
+
 
 
 db.connect().then(() => {
@@ -22,6 +25,11 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(
+  jwtMiddleware({secret: secrets.jwtSecret})
+      .unless({path: ['/sessions','/users'], method: 'GET'})
+)
 
 app.use('/places', places);
 app.use('/users', users);
