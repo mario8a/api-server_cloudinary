@@ -3,6 +3,8 @@ const mongoosePaginate = require('mongoose-paginate');
 const uploader = require('./Uploader');
 const slugify = require('../plugins/slugify');
 
+const Visit = require('../models/Visit');
+
 let placeSchema = new mongoose.Schema({
     title: {
         type: String,
@@ -54,6 +56,10 @@ placeSchema.methods.saveImageUrl = function(secureUrl,imageType){
       return true;
     })
   }
+
+placeSchema.virtual('visits').get(function() {
+  return Visit.find({'_place': this._id}).sort('-id');
+});
   
 
 
@@ -72,6 +78,9 @@ function generateSlugSaveAndContinue(count,next){
     next();
   })
 }
+
+
+
 
 let Place = mongoose.model('Place', placeSchema);
 

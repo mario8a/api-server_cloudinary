@@ -6,7 +6,10 @@ const jwtMiddleware = require('express-jwt');
 
 const places = require('./routes/places');
 const users = require('./routes/users');
-const sessions  = require('./routes/sessions')
+const sessions  = require('./routes/sessions');
+const favorites = require('./routes/favorites');
+const visits = require('./routes/visits');
+const visitsPlaces = require('./routes/visitsPlaces');
 
 const db = require('./config/database');
 const secrets = require('./config/secret');
@@ -32,8 +35,11 @@ app.use(
 )
 
 app.use('/places', places);
+app.use('/places', visitsPlaces);
 app.use('/users', users);
 app.use('/sessions', sessions);
+app.use('/favorites', favorites);
+app.use('/visits', visits);
 
 
 // catch 404 and forward to error handler
