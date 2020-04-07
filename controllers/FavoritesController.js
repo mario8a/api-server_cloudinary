@@ -14,14 +14,12 @@ function find(req,res,next) {
 }
 
 function index(req,res) {
-    //req.user No puede entrar cualquier usuario a menos que sea valido
-    User.findOne({'_id': req.user.id}).then(user => {
-        user.favorites.then(places => {
-            res.json(places);
-        })
-    }).catch(err => {
-        console.log(err);
-        res.json(err);
+    if(!req.fullUser) return res.json({});
+    req.fullUser.favorites.then(places=>{
+      res.json(places);
+    }).catch(err=>{
+      console.log(err);
+      res.json(err);
     })
 }
 
