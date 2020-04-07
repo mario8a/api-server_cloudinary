@@ -16,7 +16,7 @@ const applications = require('./routes/aplications');
 
 //Middlewares
 const findAppBySecret = require('./middlewares/findAppBySecret');
-const authApp  = require('./middlewares/authApp');
+const authApp  = require('./middlewares/authApp')();
 
 const db = require('./config/database');
 const secrets = require('./config/secret');
@@ -38,11 +38,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //USANDO LOS MIDLEWARES/ Teniendo ya una app se debera enviar el secret para consultas
 app.use(findAppBySecret);
-app.use(authApp);
+app.use(authApp.unless({method: 'OPTIONS'}));
 
 app.use(
   jwtMiddleware({secret: secrets.jwtSecret})
-      .unless({path: ['/sessions','/users'], method: 'GET'})
+      .unless({path: ['/sessions','/users'], method: ['GET','OPTIONS']})
 )
 
 app.use('/places', places);
