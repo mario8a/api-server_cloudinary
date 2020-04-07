@@ -17,6 +17,6 @@ router.route('/')
     .post(aplicationsController.create);
 
 router.route('/:id')
-    .delete(aplicationsController.find,authenticateOwner ,aplicationsController.destroy)
+    .delete(aplicationsController.find,aplicationsController.destroy)
 
 module.exports = router;
