@@ -1,3 +1,5 @@
+const Application = require('./models/Aplication');
+
 var express = require('express');
 var path = require('path');
 var logger = require('morgan');
@@ -11,6 +13,10 @@ const favorites = require('./routes/favorites');
 const visits = require('./routes/visits');
 const visitsPlaces = require('./routes/visitsPlaces');
 const applications = require('./routes/aplications');
+
+//Middlewares
+const findAppBySecret = require('./middlewares/findAppBySecret');
+const authApp  = require('./middlewares/authApp');
 
 const db = require('./config/database');
 const secrets = require('./config/secret');
@@ -30,6 +36,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+//USANDO LOS MIDLEWARES/ Teniendo ya una app se debera enviar el secret para consultas
+app.use(findAppBySecret);
+app.use(authApp);
+
 app.use(
   jwtMiddleware({secret: secrets.jwtSecret})
       .unless({path: ['/sessions','/users'], method: 'GET'})
@@ -42,6 +52,11 @@ app.use('/sessions', sessions);
 app.use('/favorites', favorites);
 app.use('/visits', visits);
 app.use('/applications', applications)
+
+//demo para eliminar todas las apps
+// app.use('/demo',function(req,res){
+//   Application.remove({}).then(r => res.json({message: 'Aplicacion eliminada'}))
+// })
 
 
 // catch 404 and forward to error handler
