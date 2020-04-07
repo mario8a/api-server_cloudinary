@@ -11,7 +11,7 @@ module.exports = function(req,res,next){
       if(!app) return next(new Error('Invalid application'));
 
       req.application = app;
-    //   req.validRequest = true;
+      req.validRequest = true;
       
       next();
     }).catch(error=>{
